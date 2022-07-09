@@ -2,11 +2,12 @@
 import json
 
 class Transaction: 
-    def __init__(self, _recipient, _signature, _amount, _note):
+    def __init__(self, _recipient, _signature, _amount, _note, _time):
         self.recipient = _recipient
         self.signature = _signature
         self.amount = _amount
         self.note = _note
+        self.time = _time
 
     def toJson(self):
         return json.dumps(self.__dict__)

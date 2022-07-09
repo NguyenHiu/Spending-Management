@@ -5,6 +5,7 @@ import time
 
 class Blockchain:
     def __init__(self, _difficult=1):
+        self.unconfirm_transactions = []
         self.chain = []
         self.first_block()
         self.difficult = _difficult
