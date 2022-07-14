@@ -9,4 +9,5 @@ class Block:
         self.nonce = _nonce
 
     def compute_hash(self):
-        return sha256(json.dumps(self.__dict__, sort_keys=True)).hexdigest()
+        #print (self.__dict__)
+        return sha256(json.dumps(self.__dict__, sort_keys=True).encode()).hexdigest()

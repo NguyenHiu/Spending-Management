@@ -1,5 +1,6 @@
 from hashlib import sha256
 from block import Block
+from transaction import Transaction
 import json
 import time
 
@@ -12,3 +13,10 @@ class Node:
         # consensus
 
     # def consensus(self)
+    def create_transaction(self, receiver, amount, note):
+        '''
+        Create a transaction
+        '''
+        # create a transaction
+        transaction = Transaction(receiver, self.pubKey, amount, note, time.time())
+        return transaction
