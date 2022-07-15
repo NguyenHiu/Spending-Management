@@ -1,7 +1,6 @@
 from hashlib import sha256
 from block import Block
 from transaction import Transaction
-from utility import Postman
 from blockchain import Blockchain
 import json
 import time
