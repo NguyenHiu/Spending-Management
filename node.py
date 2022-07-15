@@ -56,6 +56,8 @@ class Node:
             _chain = self.sender.recv(BUFFER_SIZE).decode("utf8")
             if int(_chain[0]) > int(maxChain[0]):
                 maxChain = _chain
+            self.sender.close()
+            self.sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         self.blockchain.convertJson2Chain(maxChain[1:-1])
 
