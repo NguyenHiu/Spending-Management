@@ -3,24 +3,64 @@ from block import *
 import json
 import time
 
+from transaction import Transaction
+
 class Blockchain:
     def __init__(self, _difficulty=1):
         self.unconfirm_transactions = []
         self.chain = []
-        self.first_block()
         self.difficulty = _difficulty
+        self.first_block()
 
 
     def first_block(self):
         fBlock = Block(0, [], 0, "0")
-        fBlock.hash = fBlock.compute_hash()
+        # fBlock.hash = fBlock.compute_hash()
+        # print('in blockchain: ', end="")
+        # print(fBlock.hash)
         self.chain.append(fBlock)
+        # self.output()
+
+
+    def output(self):
+        print("Unconfirm_Transaction: ", end="")
+        for trans in self.unconfirm_transactions:
+            print("         " + json.dumps(trans.toJson()))
+
+        print("\nChain: ", end="")
+        for block in self.chain:
+            print("         " + json.dumps(block.convertBlock2Json()))
+
+        print("\nDifficulty: " + str(self.difficulty))
+        print("\n\n")
     
+
     def convertJson2Chain(self, msg):
-        return True
+        self.difficulty = msg["difficulty"]
+        un_trans = msg["unconfirm_transactions"]
+        for trans in un_trans:
+            self.unconfirm_transactions.append(Transaction.Json2Transaction(trans))
+
+        _chain = msg["chain"]
+        for block in _chain:
+            self.chain.append(Block.convertJson2Block(block))
+
+
 
     def convertChain2Json(self):
-        return "json"
+        str = {
+            "unconfirm_transactions": [],
+            "chain": [],
+            "difficulty": self.difficulty
+        }
+        for trans in self.unconfirm_transactions:
+            str["unconfirm_transactions"].append(trans.toJson_())
+
+        for block in self.chain:
+            str["chain"].append(block.convertBlock2Json())
+
+        return str
+
 
     def last_block(self):
         return self.chain[-1]
@@ -30,29 +70,20 @@ class Blockchain:
         return len(self.chain)
 
 
-    def proof_of_work(self, block):
-        block.nonce = 0
-
-        res = block.compute_hash()
-        while not res.startswith('0' * self.difficult):
-            block.nonce += 1
-            res = block.compute_hash()
-        
-        return res
+    def is_valid_proof(self, block):#, proof):
+        return block.compute_hash().startswith('0' * self.difficulty)
+        # return (proof.startswith('0' * self.difficult) and proof == block.compute_hash())
 
 
-    def is_valid_proof(self, block, proof):
-        return (proof.startswith('0' * self.difficult) and proof == block.compute_hash())
-
-
-    def add_block(self, block, hash_val):
-        block.hash = hash_val
+    def add_block(self, block):#, hash_val):
+        # block.hash = hash_val
         self.chain.append(block)
     
 
     def add_transaction(self, transaction):
-        jsonTrans = json.dumps(transaction.__dict__)
-        self.unconfirm_transactions.append(jsonTrans)
+        # jsonTrans = json.dumps(transaction.__dict__)
+        # self.unconfirm_transactions.append(jsonTrans)
+        self.unconfirm_transactions.append(transaction)
 
 
     def proof_of_work(self, block):
@@ -70,6 +101,28 @@ class Blockchain:
         return computed_hash
     
 
+    def getBalanceOf(self, SO):
+        balance = 0
+        for so in self.chain:
+            for trans in so.transactions:
+                if trans.receiver == SO:
+                    balance += trans.amount
+                if trans.sender == SO:
+                    balance -= trans.amount
+
+        return balance
+
+
+    def verifyBlock(self, block):
+        last_hash = self.last_block().compute_hash()
+        print('lash_hash: ', end="")
+        print(last_hash)
+        # verify transactions of the block ?  --> Dunno ...
+        if block.prevHash == last_hash:
+            return True
+        return False
+
+
     def mine(self):
         if not self.unconfirm_transactions:
             return False
@@ -77,9 +130,9 @@ class Blockchain:
         last_block = self.last_block()
 
         new_block = Block(last_block.id + 1, 
-        self.unconfirm_transactions, last_block.hash, 0)
+                          self.unconfirm_transactions, last_block.compute_hash(), 0)
     
         hash_val = self.proof_of_work(new_block)
-        self.add_block(new_block, hash_val)
+        self.add_block(new_block)#, hash_val)
         self.unconfirm_transactions = []
         return new_block.id

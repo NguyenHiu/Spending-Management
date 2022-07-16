@@ -7,40 +7,53 @@ import time
 import socket
 from threading import Thread
 import random as rd
+import key
 
 REQUESTADDR = 'addr'
-REQUESTBLOCK = 'block'
 REQUESTBLOCKCHAIN = 'blockchain'
+BROADCASTBLOCK = 'bblock'
 
 BUFFER_SIZE = 4096
+SEPARATOR = '|'
 
 class Node:
-    def __init__(self, _name, _priKey, _addr, _connectedBlock=("0", 0), _max=5):
+    def __init__(self, _name, _priKey, _pubKey, _addr, _connectedBlock=("0", 0), _max=5):
         '''
         Sau khi tao thi se goi co-che-dong-thuan de copy chain cua node khac !
         '''
+        
+        self.name = _name
+        self.priKey = _priKey
+        self.pubKey = _pubKey
+        self.max = _max # the maximum number of connections
+        self.addr = _addr
+
         self.receiver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.receiver.bind(self.addr)
         self.receiver.listen(1) # 1 or 2 or 3 or ?
         self.sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.name = _name
-        self.priKey = _priKey
-        self.addr = _addr
 
         self.connections = []
         self.getConnection(_connectedBlock)
 
+        print("Done Get-Connection")
+
         self.blockchain = Blockchain()
         self.requestBlockchain() # copy blockchain from connected nodes
+        self.blockchain.output()
 
-        self.max = _max # the maximum number of connections
+        print("Done Request-Blockchain")
+
         self.accept_signal = True
         self.recv_signal = True
         # self.send_signal = True
         
         self.Thread_accept = Thread(target=self.accept, daemon=True)
         self.Thread_accept.start()
+        # self.Thread_accept.join()
+
+        # time.sleep(30)
 
         # consensus
 
@@ -49,48 +62,44 @@ class Node:
             return
 
         # find the longest chain of connected nodes
-        maxChain = "0"
+        maxChain = "1"
         for addr in self.connections:
             self.sender.connect(addr)
             self.sender.sendall(bytes(REQUESTBLOCKCHAIN, "utf8"))
             _chain = self.sender.recv(BUFFER_SIZE).decode("utf8")
+            self.sender.close()
+            self.sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             if int(_chain[0]) > int(maxChain[0]):
                 maxChain = _chain
-            self.sender.close()
-            self.sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.blockchain.convertJson2Chain(maxChain[1:-1])
+        if maxChain == "1":
+            return
+        
+        maxChain = maxChain.split(SEPARATOR)
+        self.blockchain.convertJson2Chain(json.loads(maxChain[1]))
 
     def getConnection(self, addr): 
-        if addr == ("0", 0):
+        if (addr == ("0", 0)) or (addr == self.addr):
             return
 
-        msg = REQUESTADDR + "," + self.addr[0] + "," + str(self.addr[1])
-        check = False
+        msg = REQUESTADDR + SEPARATOR + self.addr[0] + SEPARATOR + str(self.addr[1])
 
-        self.sender.connect(addr)
-        self.connections.append(addr)
-        
         for i in range(0, rd.randint(1, self.max)):
-            self.sender.sendall(bytes(msg, "utf8")) # request new addr
-            addr = self.splitMsg1(self.sender.recv(BUFFER_SIZE).decode("utf8"))
-
-            self.sender.close()
-            self.sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            if addr in self.connections:
-                check = True
-                continue      
-            
-            check = False
+            if addr not in self.connections:
+                self.connections.append(addr)
 
             self.sender.connect(addr)
-            self.connections.append(addr) 
-
-        if not check:
+            self.sender.sendall(bytes(msg, "utf8")) # request new addr
+            _addr = self.splitMsg1(self.sender.recv(BUFFER_SIZE).decode("utf8"))
             self.sender.close()
             self.sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+            if _addr != self.addr:
+                addr = _addr
+
+        print('* Get Connections: ')
+        self.printConnections()
+            
     
     def getSize(self):
         return len(self.connections)
@@ -112,8 +121,9 @@ class Node:
                 print("cmd: " + cmd)
             except:
                 continue
+
             if cmd[0:4] == REQUESTADDR:
-                _in4 = cmd.split(",")
+                _in4 = cmd.split(SEPARATOR)
                 print(_in4)
                 msg = self.randomAddr()
                 self.client.sendall(bytes(msg, "utf8"))
@@ -121,36 +131,50 @@ class Node:
                     self.connections.append((_in4[1], int(_in4[2])))
                 self.client.close() 
                 return
-            elif (len(cmd) > 5) and (cmd[0:5] == REQUESTBLOCK):
-                _in4 = cmd.split(",", 1)
+
+            elif (len(cmd) >= 6) and (cmd[0:6] == BROADCASTBLOCK):
+                _in4 = cmd.split(SEPARATOR)
                 print(_in4)
-                # block = Block(_in4[1])
-                # if self.verifyBlock(block):
-                    # add block
-                    # broadcast block
-            elif (len(cmd) > 9) and (cmd[0:9] == REQUESTBLOCKCHAIN):
-                return
+
+                # newBlock = Block()
+                block = json.loads(_in4[1])
+                print('--------------')
+                print(block)
+                print('--------------')
+                # newBlock.convertJson2Block(block)
+                newBlock = Block.convertJson2Block(block)
+                print('newBlock\'s previous hash: ', end="")
+                print(newBlock.prevHash)
+                if self.blockchain.is_valid_proof(newBlock) and self.blockchain.verifyBlock(newBlock):
+                    print("VERIFY SUCCESSFULLY, LETS BROADCAST\n"+cmd)
+                    self.blockchain.add_block(newBlock)
+                    self.sendBroadcast(cmd)
+
+            elif (len(cmd) >= 10) and (cmd[0:10] == REQUESTBLOCKCHAIN):
+                print(json.dumps(self.blockchain.convertChain2Json()))
+                msg = str(self.blockchain.length()) + SEPARATOR + json.dumps(self.blockchain.convertChain2Json())
+                self.client.sendall(bytes(msg, "utf8"))
+                self.client.close()
+
             else:
                 print('outto!')
                 return
 
 
     def verifyBlock(self, block):
-        # if block in self.blocks[]
-        # return False
-        return True
+        return self.blockchain.verifyBlock(block)
 
 
     def randomAddr(self):
         if self.getSize() == 0:
-            return self.ip+","+str(self.port)
+            return self.addr[0]+SEPARATOR+str(self.addr[1])
         rand = rd.randint(0, self.getSize()-1)
         print(self.connections[rand])
-        return self.connections[rand][0]+","+str(self.connections[rand][1])
+        return self.connections[rand][0]+SEPARATOR+str(self.connections[rand][1])
 
 
     def splitMsg1(self, msg):
-        ip, _port = msg.split(",")
+        ip, _port = msg.split(SEPARATOR)
         return (ip, int(_port))
 
 
@@ -162,16 +186,57 @@ class Node:
 
 
     def sendBroadcast(self, msg):
+        # signature = key.sign(msg, self.priKey)
         for addr in self.connections:
             self.sender.connect(addr)
             self.sender.sendall(bytes(msg, "utf8"))
-            # self.socket.close()
+            self.sender.close()
+            self.sender = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # def consensus(self)
+    
+    def verifyTransaction(self, transaction):
+        # Check if the transaction comes from right node.
+        if not key.verify(json.dumps(transaction.toJson()), transaction.signature, transaction.sender):
+            # the transaction is not valid
+            return False
+
+        # Check if amount <= balance of sender
+        # if self.getBalanceOf(self.sender) < transaction.amount:
+        #     return False
+
+        # Check if receiver is valid
+        # chua nghi ra
+
+        return True
+
+
+    def getBalanceOf(self, SO):
+        return self.blockchain.getBalanceOf(SO)
+
+
     def create_transaction(self, receiver, amount, note):
         '''
         Create a transaction
         '''
-        # create a transaction
-        transaction = Transaction(receiver, sha256(self.priKey), amount, note, time.time())
+
+        transaction = Transaction(receiver, self.pubKey, self.priKey, amount, note, time.time())
+
+        # special case: after creating a transaction, blockchain will take it and generate a block, then broadcast, 
+        #               but we still have the same verification function as bitcoin (even though not even any value)
+        if not self.verifyTransaction(transaction):
+            return False
+
+        self.blockchain.add_transaction(transaction)
+        self.blockchain.mine()
+        msg = BROADCASTBLOCK + SEPARATOR + json.dumps(self.blockchain.last_block().convertBlock2Json())
+        self.sendBroadcast(msg)
+        # -------------------------------
+
         return transaction
+
+    
+    def _deposit(self, amount):
+        transaction = Transaction(self.pubKey, self.pubKey, self.priKey, amount, "Deposit", time.time())
+        self.blockchain.add_transaction(transaction)
+        self.blockchain.mine()
+        self.sendBroadcast(BROADCASTBLOCK + SEPARATOR + json.dumps(self.blockchain.last_block.__dict__))
