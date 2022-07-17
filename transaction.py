@@ -13,13 +13,7 @@ class Transaction:
         self.note = _note
         self.time = _time
         self.signature = (key.sign(json.dumps(self.toJson()), _sk))
-        # print('sig: ', end="")
-        # print(self.signature)
-        # print(type(self.signature))
-        # if bytes.fromhex(self.signature.hex()) == self.signature:
-        #     print("YESS")
-        # else:
-        #     print("NOOO")
+
 
     def _json_dump(self) -> dict:
         js = {
@@ -34,8 +28,10 @@ class Transaction:
     def toJson(self) -> dict: # For broadcast
         return self._json_dump()
     
+
     def toJson_(self) -> dict: # For copy
         return self.__dict__
+
 
     def Json2Transaction(msg):
         trans = Transaction(Null=True)
@@ -46,7 +42,4 @@ class Transaction:
         trans.time = msg["time"]
         trans.signature = msg["signature"]
         return trans
-
-# a = Transaction('0x1', '0x2', '5', 'testing')
-# print(a.toJson())
 

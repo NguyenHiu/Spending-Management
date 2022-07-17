@@ -23,28 +23,30 @@ class Blockchain:
 
 
     def output(self):
-        print("Unconfirm_Transaction: ", end="")
+        print("---Begin Blockchain---")
+        print("       * Unconfirm_Transaction: ")
         for trans in self.unconfirm_transactions:
-            print("         " + json.dumps(trans.toJson()))
+            print("            " + json.dumps(trans.toJson()))
 
-        print("\nChain: ", end="")
+        print("       * Chain: ")
         for block in self.chain:
-            print("         " + json.dumps(block.convertBlock2Json()))
+            print("            " + json.dumps(block.convertBlock2Json()))
 
-        print("\nDifficulty: " + str(self.difficulty))
-        print("\n\n")
+        print("       * Difficulty: " + str(self.difficulty))
+        print("---End Blockchain---")
     
 
     def convertJson2Chain(self, msg):
         self.difficulty = msg["difficulty"]
         un_trans = msg["unconfirm_transactions"]
+
+        self.unconfirm_transactions = []
         for trans in un_trans:
             self.unconfirm_transactions.append(Transaction.Json2Transaction(trans))
 
         _chain = msg["chain"]
         for block in _chain:
             self.chain.append(Block.convertJson2Block(block))
-
 
 
     def convertChain2Json(self):
@@ -87,10 +89,6 @@ class Blockchain:
 
 
     def proof_of_work(self, block):
-        """
-        Function that tries different values of nonce to get a hash
-        that satisfies our difficulty criteria.
-        """
         block.nonce = 0
 
         computed_hash = block.compute_hash()
@@ -115,8 +113,8 @@ class Blockchain:
 
     def verifyBlock(self, block):
         last_hash = self.last_block().compute_hash()
-        print('lash_hash: ', end="")
-        print(last_hash)
+        # print('lash_hash: ', end="")
+        # print(last_hash)
         # verify transactions of the block ?  --> Dunno ...
         if block.prevHash == last_hash:
             return True

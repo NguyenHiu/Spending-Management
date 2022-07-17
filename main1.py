@@ -33,9 +33,11 @@ sk, pk = key.generate_key()
 # DICT.add(pk, addr)
 addr = ("127.0.0.2", 60001)
 B = Node("User-2", sk, pk, addr, ("127.0.0.1", 60001))
-B.printConnections()
+# B.printConnections()
+time.sleep(5)
 B.create_transaction("user-2", 100, "note")
 time.sleep(30)
-
+B.blockchain.output()
+B.printConnections()
 # B.blockchain.output()
 
