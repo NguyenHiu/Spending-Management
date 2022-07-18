@@ -41,3 +41,8 @@ def verify(message, signature, pk) -> bool:
     digest = SHA256.new()
     digest.update(message)
     return signer.verify(digest, signature)
+
+# https://stackoverflow.com/questions/51228645/how-can-i-encrypt-with-a-rsa-private-key-in-python
+# https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html
+# https://viblo.asia/p/ecdsa-he-mat-dua-tren-duong-cong-elliptic-va-ung-dung-trong-blockchain-XL6lA4oDZek
+# https://cryptobook.nakov.com/asymmetric-key-ciphers/rsa-encrypt-decrypt-examples
