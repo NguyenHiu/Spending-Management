@@ -49,6 +49,6 @@ class parent:
 # a.reverse(b)
 
 
-a = b'0x5test'
-print(a.decode('utf-8'))
-# print(bytes(str(a), 'utf-8'))
+# a = b'0x5test'
+# print(a.decode('utf-8'))
+# # print(bytes(str(a), 'utf-8'))

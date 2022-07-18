@@ -45,6 +45,7 @@ class Blockchain:
             self.unconfirm_transactions.append(Transaction.Json2Transaction(trans))
 
         _chain = msg["chain"]
+        self.chain = []
         for block in _chain:
             self.chain.append(Block.convertJson2Block(block))
 
@@ -101,13 +102,16 @@ class Blockchain:
 
     def getBalanceOf(self, SO):
         balance = 0
+        # print('<><><><><><> publickey: ' + SO)
         for so in self.chain:
             for trans in so.transactions:
                 if trans.receiver == SO:
                     balance += trans.amount
+                    print(trans.amount)
                 if trans.sender == SO:
                     balance -= trans.amount
-
+                    print(trans.amount)
+        # print(">>>>>> Balance: " + str(balance))
         return balance
 
 
