@@ -1,9 +1,7 @@
+from transaction import Transaction
 from hashlib import sha256
 from block import *
 import json
-import time
-
-from transaction import Transaction
 
 class Blockchain:
     def __init__(self, _difficulty=1):
@@ -15,26 +13,8 @@ class Blockchain:
 
     def first_block(self):
         fBlock = Block(0, [], 0, "0")
-        # fBlock.hash = fBlock.compute_hash()
-        # print('in blockchain: ', end="")
-        # print(fBlock.hash)
         self.chain.append(fBlock)
-        # self.output()
 
-
-    def output(self):
-        print("---Begin Blockchain---")
-        print("       * Unconfirm_Transaction: ")
-        for trans in self.unconfirm_transactions:
-            print("            " + json.dumps(trans.toJson()))
-
-        print("       * Chain: ")
-        for block in self.chain:
-            print("            " + json.dumps(block.convertBlock2Json()))
-
-        print("       * Difficulty: " + str(self.difficulty))
-        print("---End Blockchain---")
-    
 
     def convertJson2Chain(self, msg):
         self.difficulty = msg["difficulty"]
@@ -73,19 +53,15 @@ class Blockchain:
         return len(self.chain)
 
 
-    def is_valid_proof(self, block):#, proof):
+    def is_valid_proof(self, block):
         return block.compute_hash().startswith('0' * self.difficulty)
-        # return (proof.startswith('0' * self.difficult) and proof == block.compute_hash())
 
 
-    def add_block(self, block):#, hash_val):
-        # block.hash = hash_val
+    def add_block(self, block):
         self.chain.append(block)
     
 
     def add_transaction(self, transaction):
-        # jsonTrans = json.dumps(transaction.__dict__)
-        # self.unconfirm_transactions.append(jsonTrans)
         self.unconfirm_transactions.append(transaction)
 
 
@@ -102,24 +78,17 @@ class Blockchain:
 
     def getBalanceOf(self, SO):
         balance = 0
-        # print('<><><><><><> publickey: ' + SO)
         for so in self.chain:
             for trans in so.transactions:
                 if trans.receiver == SO:
                     balance += trans.amount
-                    print(trans.amount)
                 if trans.sender == SO:
                     balance -= trans.amount
-                    print(trans.amount)
-        # print(">>>>>> Balance: " + str(balance))
         return balance
 
 
     def verifyBlock(self, block):
         last_hash = self.last_block().compute_hash()
-        # print('lash_hash: ', end="")
-        # print(last_hash)
-        # verify transactions of the block ?  --> Dunno ...
         if block.prevHash == last_hash:
             return True
         return False
@@ -138,3 +107,17 @@ class Blockchain:
         self.add_block(new_block)#, hash_val)
         self.unconfirm_transactions = []
         return new_block.id
+
+
+    def output(self):
+        print("---Begin Blockchain---")
+        print("       * Unconfirm_Transaction: ")
+        for trans in self.unconfirm_transactions:
+            print("            " + json.dumps(trans.toJson()))
+
+        print("       * Chain: ")
+        for block in self.chain:
+            print("            " + json.dumps(block.convertBlock2Json()))
+
+        print("       * Difficulty: " + str(self.difficulty))
+        print("---End Blockchain---")

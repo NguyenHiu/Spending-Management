@@ -48,7 +48,7 @@ class Run:
             try:
                 cmd = ""
                 cmd = self.client.recv(BUFFER_SIZE).decode("utf8")
-                print('cmd: ' + cmd)
+                # print('cmd: ' + cmd)
             except socket.error:
                 continue
 
@@ -59,7 +59,7 @@ class Run:
             elif cmd[0:4] == REQUESTJOIN:
                 _, name = cmd.split(SEPARATOR)
 
-                print('name: ' + name)
+                # print('name: ' + name)
 
                 newAddr = self.newAddress()
                 
@@ -81,7 +81,7 @@ class Run:
                 msg = ""
                 msg = newAddr[0] + SEPARATOR + str(newAddr[1]) + SEPARATOR + sk + SEPARATOR + pk + SEPARATOR + nodeConnect
 
-                print('msg: ' + msg)
+                # print('msg: ' + msg)
 
                 self.client.sendall(bytes(msg, 'utf-8'))
                 self.client.close()
