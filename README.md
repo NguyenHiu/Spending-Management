@@ -5,6 +5,8 @@ Spending management is very important to our lives, it helps us to always be rea
 
 **Purpose:** The application runs on a __**BLOCKCHAIN**__ database, we are studying blockchain, so this project helps us to understand more broadly about bitcoin/blockchain mechanism. App uses __Socket__ to send or receive messages, it's optional.
 
+We use _tkinter library_ to create a basic UI.
+
 ## About us:
 
 |            Name               | Profile 
