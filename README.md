@@ -54,7 +54,7 @@ Then, you can try some features from Feature Screen.
 ```console
 Balance = (money in) - (money out)
 ```
-2. Create Transaction: allows you send/receive money from other. **Note:** Don't pass the note (must write something - It's just a bug XD).
+2. Create Transaction: allows you send/receive money from other. **Note:** Don't leave _Note_ blank (It's just a bug XD).
 
 ![image](https://user-images.githubusercontent.com/87634727/179824808-6a955099-c96d-44ca-88f5-4526b6b7a47d.png)
 
