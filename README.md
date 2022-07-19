@@ -7,10 +7,10 @@ Spending management is very important to our lives, it helps us to always be rea
 
 ## About us:
 
-|   Student ID   |            Name               | Profile 
-|----------------|-------------------------------|----------------------------
-|    20120316    |Nguyen Hoang Lam | [@Hoanglam1134](https://github.com/Hoanglam1134)            
-|    20120476    |Nguyen Trong Hieu | [@NguyenHiu](https://github.com/NguyenHiu)    
+|            Name               | Profile 
+|-------------------------------|----------------------------
+|Nguyen Hoang Lam | [@Hoanglam1134](https://github.com/Hoanglam1134)            
+|Nguyen Trong Hieu | [@NguyenHiu](https://github.com/NguyenHiu)    
 
 ## Getting Started
 ### Installation
