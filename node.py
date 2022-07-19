@@ -156,11 +156,16 @@ class Node:
         return (ip, int(_port))
 
 
-    def printConnections(self):
-        print("- List of connections:")
-        for addr in self.connections:
-            print("   + ", end="")
-            print(addr)
+    def GetConnections(self):
+        return self.connections
+
+    
+    def GetBlockchainInfor(self):
+        return self.blockchain.GetBlockchainInfor()
+
+
+    def GetTransactionOf(self, pk):
+        return self.blockchain.GetTransactionOf(pk)
 
 
     def sendBroadcast(self, msg):

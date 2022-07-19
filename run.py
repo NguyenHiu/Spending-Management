@@ -13,6 +13,7 @@ from PIL import Image, ImageTk
 DEFAULT_IP = "127.0.0."
 DEFAULT_PORT = 60001
 REQUESTJOIN = 'join'
+REQUESTNAME = 'name'
 REQUESTPK = 'pk'
 
 class Run:
@@ -117,6 +118,19 @@ class Run:
                 msg = newAddr[0] + SEPARATOR + str(newAddr[1]) + SEPARATOR + sk + SEPARATOR + pk + SEPARATOR + nodeConnect
 
                 # print('msg: ' + msg)
+
+                self.client.sendall(bytes(msg, 'utf-8'))
+                self.client.close()
+
+                return
+
+            elif cmd[0:4] == REQUESTNAME:
+                _, pk = cmd.split(SEPARATOR)
+
+                msg = "~|"
+                for _name, _pk in self.pkDictionary.items():
+                    if _pk == pk:
+                        msg = _name
 
                 self.client.sendall(bytes(msg, 'utf-8'))
                 self.client.close()

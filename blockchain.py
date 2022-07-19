@@ -108,15 +108,23 @@ class Blockchain:
         return new_block.id
 
 
-    def output(self):
-        print("---Begin Blockchain---")
-        print("       * Unconfirm_Transaction: ")
-        for trans in self.unconfirm_transactions:
-            print("            " + json.dumps(trans.toJson()))
-
-        print("       * Chain: ")
+    def GetBlockchainInfor(self):
+        # Sender - Receiver - Amount - Note 
+        chain_infor = []
         for block in self.chain:
-            print("            " + json.dumps(block.convertBlock2Json()))
+            block_infor = []
+            for transaction in block.transactions:
+                block_infor.append([transaction.sender, transaction.receiver, transaction.amount, transaction.note])
+            chain_infor.append(block_infor)
 
-        print("       * Difficulty: " + str(self.difficulty))
-        print("---End Blockchain---")
+        return chain_infor
+
+
+    def GetTransactionOf(self, pk):
+        transactions = []
+        for block in self.chain:
+            for transaction in block.transactions:
+                if (transaction.sender == pk) or (transaction.receiver == pk):
+                    transactions.append([transaction.sender, transaction.receiver, transaction.amount, transaction.note, transaction.time])
+
+        return transactions
