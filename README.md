@@ -50,7 +50,7 @@ Then, you can try some features from Feature Screen.
 
 ### Features
 
-1. Get Balance: calculates transactions in blockchain to know how many money you have, using the same mechanism as bitcoin. 
+1. Get Balance: calculates transactions in blockchain to know how much money you have, using the same mechanism as bitcoin. 
 ```console
 Balance = (money in) - (money out)
 ```
