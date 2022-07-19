@@ -29,11 +29,26 @@ pip install -r requirements.txt
 ## Release Folder 
 There are 2 files in _the release folder_, 
 1. **run.exe** creates a Hub which every node joins to the network must be connected with, Hub will provide _Ip, Port, Public Key, and Private Key_ for the node. So we need to run _run.exe_ first.
-2. **user.exe** creates a new user, represents a user which joins the network and contains a node object.
+2. **user.exe** creates a new user, represents an user which joins the network and contains a node object.
 
 ## Banker
 Because of the blockchain database, so we need a input source. 
 The Hub will take the first user as the **Banker** who can create money, that's mean this user can send the amount of money larger than he has. 
+
+## Overview - how it works
+Let's take an example, when User A joins to the network:
+1. Hub provides another user address for A. 
+2. A adds this address to his connected list.
+3. A connects to this address and requests another user address, then repeat step 2 X times (X >= 1).
+4. Then, A sends message to request blockchain from users in his connections and takes the longest blockchain as his local chain.
+
+That's how a node/user keeps itself up-to-date when joining to the network.
+
+Then, take a look at how a transaction is created and consensus mechanism. Again, take an example, User A sends 500$ to User B,
+1. User A creates transaction, then A tries to mine a block which contains the transaction he made.
+2. After mining successfully, he will broadcast (send message to all his connetect list) the block.
+
+
 
 ## Demo
 First, click START to open the Hub.
