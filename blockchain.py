@@ -1,3 +1,4 @@
+from node import BANKER_PK
 from transaction import Transaction
 from block import *
 import json

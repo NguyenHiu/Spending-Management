@@ -53,6 +53,7 @@ class User:
         root.feature_frame.list_connections = tk.Button(root.feature_frame, text="List Connections", command=self.FeatureFrame2ListConnection)
         root.feature_frame.blockchain_detail = tk.Button(root.feature_frame, text="Blockchain Detail", command=self.FeatureFrame2BlockchainDetail)
         root.feature_frame.history = tk.Button(root.feature_frame, text="History", command=self.FreatureFrame2History)
+        root.feature_frame.information = tk.Button(root.feature_frame, text="Information", command=self.FeatureFrame2Information)
         root.feature_frame.name = tk.Label(root.feature_frame, text="")
 
         root.feature_frame.title.grid(row=0)
@@ -61,7 +62,8 @@ class User:
         root.feature_frame.list_connections.grid(row=3)
         root.feature_frame.blockchain_detail.grid(row=4)
         root.feature_frame.history.grid(row=5)
-        root.feature_frame.name.grid(row=6)
+        root.feature_frame.information.grid(row=6)
+        root.feature_frame.name.grid(row=7)
 
 
     def create_ListConnection_Frame(self, root):
@@ -74,7 +76,7 @@ class User:
         root.ListConnectionTable.list.column("Port", anchor="center", width=200, stretch='NO')
 
         root.ListConnectionTable.list.heading("IP", text="IP", anchor="center")
-        root.ListConnectionTable.list.heading("Port", text="PORT", anchor="center")
+        root.ListConnectionTable.list.heading("Port", text="Port", anchor="center")
         
         _list = self.node.GetConnections()
         for connection in _list:
@@ -130,6 +132,55 @@ class User:
         root.BlockchainDetailTable.list.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='ns')
 
+
+    def create_YourInformation_Frame(self, root):
+        root.YourInformation_Frame = tk.Frame(root)
+        root.YourInformation_Frame.title = tk.Label(root.YourInformation_Frame, text="Your information", font="Bold 20")
+        root.YourInformation_Frame._name = tk.Label(root.YourInformation_Frame, text="Name: ")
+        root.YourInformation_Frame.name = tk.Label(root.YourInformation_Frame, text=self.root.name)
+        root.YourInformation_Frame._PublicKey = tk.Label(root.YourInformation_Frame, text="Public Key: ")
+        root.YourInformation_Frame.PublicKey = tk.Button(root.YourInformation_Frame, text="press to show", command=self.InformationFrame2PublicKeyFrame)
+        root.YourInformation_Frame._PrivateKey = tk.Label(root.YourInformation_Frame, text="Private Key: ")
+        root.YourInformation_Frame.PrivateKey = tk.Button(root.YourInformation_Frame, text="press to show", command=self.InformationFrame2PrivateKeyFrame)
+        root.YourInformation_Frame._IP = tk.Label(root.YourInformation_Frame, text="IP: ")
+        root.YourInformation_Frame.IP = tk.Label(root.YourInformation_Frame, text=self.node.addr[0])
+        root.YourInformation_Frame._PORT = tk.Label(root.YourInformation_Frame, text="PORT: ")
+        root.YourInformation_Frame.PORT = tk.Label(root.YourInformation_Frame, text=self.node.addr[1])
+
+        root.YourInformation_Frame.title.grid(column=0, row=0, columnspan=2)
+        root.YourInformation_Frame._name.grid(column=0, row=1)
+        root.YourInformation_Frame.name.grid(column=1, row=1)
+        root.YourInformation_Frame._PublicKey.grid(column=0, row=2)
+        root.YourInformation_Frame.PublicKey.grid(column=1, row=2)
+        root.YourInformation_Frame._PrivateKey.grid(column=0, row=3)
+        root.YourInformation_Frame.PrivateKey.grid(column=1, row=3)
+        root.YourInformation_Frame._IP.grid(column=0, row=4)
+        root.YourInformation_Frame.IP.grid(column=1, row=4)
+        root.YourInformation_Frame._PORT.grid(column=0, row=5)
+        root.YourInformation_Frame.PORT.grid(column=1, row=5)
+
+    
+    def create_PublicKey_Frame(self, root):
+        root.PublicKey_Frame = tk.Frame(root)
+        root.PublicKey_Frame.pk = tk.Label(root.PublicKey_Frame, text=self.node.pubKey)
+        root.PublicKey_Frame.pk.pack()
+
+    
+    def create_PrivateKey_Frame(self, root):
+        root.PrivateKey_Frame = tk.Frame(root)
+        root.PrivateKey_Frame.pk = tk.Label(root.PrivateKey_Frame, text=self.node.priKey)
+        root.PrivateKey_Frame.pk.pack()
+
+    def InformationFrame2PublicKeyFrame(self):
+        self.root.publicKey_newWin = Toplevel(self.root)
+        self.create_PublicKey_Frame(self.root.publicKey_newWin)
+        self.root.publicKey_newWin.PublicKey_Frame.pack()
+
+    def InformationFrame2PrivateKeyFrame(self):
+        self.root.privateKey_newWin = Toplevel(self.root)
+        self.create_PrivateKey_Frame(self.root.privateKey_newWin)
+        self.root.privateKey_newWin.PrivateKey_Frame.pack()
+    
 
     def create_History_Frame(self, root):
         root.HistoryTable = tk.Frame(root)
@@ -217,6 +268,12 @@ class User:
         self.root.list_connection_newWin.ListConnectionTable.pack()
 
 
+    def FeatureFrame2Information(self):
+        self.root.information_newWin = Toplevel(self.root)
+        self.create_YourInformation_Frame(self.root.information_newWin)
+        self.root.information_newWin.YourInformation_Frame.pack()
+
+
     def FeatureFrame2BlockchainDetail(self):
         self.root.blockchain_detail_newWin = Toplevel(self.root)
         self.create_BlockchainDetail_Frame(self.root.blockchain_detail_newWin)
@@ -301,7 +358,7 @@ class User:
 
 # List Connection Done
 # Show blockchain Done
-# History
+# History Done
 
 user = User()
 user.run()
