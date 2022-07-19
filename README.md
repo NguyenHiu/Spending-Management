@@ -34,4 +34,8 @@ There are 2 files in _the release folder_,
 ## Demo
 First, click START to open the Hub.
 
-![image](https://user-images.githubusercontent.com/87634727/179823093-af321272-dafa-47b1-bb9e-75ff918f231a.png)
+![image](https://user-images.githubusercontent.com/87634727/179823161-842c67fd-76f4-403a-9f87-6b876f5803a0.png)
+
+The Hub is open.
+![image](https://user-images.githubusercontent.com/87634727/179823215-8e25e85d-65d7-4387-9fa4-ecdc53778490.png)
+
