@@ -12,13 +12,14 @@ Spending management is very important to our lives, it helps us to always be rea
 |Nguyen Hoang Lam | [@Hoanglam1134](https://github.com/Hoanglam1134)            
 |Nguyen Trong Hieu | [@NguyenHiu](https://github.com/NguyenHiu)    
 
-## Getting Started
-### Installation
+## Installation
 ```console
 git clone https://github.com/NguyenHiu/Spending-Management
 pip install -r requirements.txt
 ```
-### Introduction 
+## Release Folder 
 There are 2 files in _the release folder_, 
 1. **run.exe** creates a Hub which every node joins to the network must be connected with, Hub will provide _Ip, Port, Public Key, and Private Key_ for the node. So we need to run _run.exe_ first.
 2. **user.exe** creates a new user, represents a user which joins the network and contains a node object.
+
+## Demo
