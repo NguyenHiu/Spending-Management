@@ -32,3 +32,6 @@ There are 2 files in _the release folder_,
 2. **user.exe** creates a new user, represents a user which joins the network and contains a node object.
 
 ## Demo
+First, click START to open the Hub.
+
+![image](https://user-images.githubusercontent.com/87634727/179823093-af321272-dafa-47b1-bb9e-75ff918f231a.png)
