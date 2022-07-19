@@ -11,6 +11,7 @@ We use _tkinter library_ to create a basic UI.
 - The network can't contain 2 users with the same name.
 - Nodes/Users can only work when run.exe is open...
 - ...
+
 The program will be crashed if something wrong happens. But these problems don't directly relate to _the blockchain machanism_, so take it easy. 
 
 ## About us:
