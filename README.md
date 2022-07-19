@@ -55,21 +55,21 @@ Then, you can try some features from Feature Screen.
 Balance = (money in) - (money out)
 ```
 2. Create Transaction: allows you send/receive money from other. **Note:** Don't pass the note (must write something - It's just a bug XD).
-3. 
+
 ![image](https://user-images.githubusercontent.com/87634727/179824808-6a955099-c96d-44ca-88f5-4526b6b7a47d.png)
 
 3. List Connections: shows list of user connected with (IP - PORT).
-4. 
+
 ![image](https://user-images.githubusercontent.com/87634727/179825498-7d0d967f-7a00-4f8d-a966-e053dbbe109f.png)
 
 4. Blockchain Detail: shows detail of the local blockchain, because we are studying blockchain xD.
-5. 
+
 ![image](https://user-images.githubusercontent.com/87634727/179825544-3c9056d7-1b80-42db-b452-0ca040e9f65f.png)
 
 5. History: shows transaction which you sent or received.
-6. 
+
 ![image](https://user-images.githubusercontent.com/87634727/179825626-030c64ba-e878-44a1-8130-193adb4ec93d.png)
 
 6. Information: shows your information. 
-7. 
+
 ![image](https://user-images.githubusercontent.com/87634727/179825665-c0f556b0-5b13-44fa-bf0e-e648d881a479.png)
