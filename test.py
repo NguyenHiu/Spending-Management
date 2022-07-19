@@ -52,3 +52,9 @@ class parent:
 # a = b'0x5test'
 # print(a.decode('utf-8'))
 # # print(bytes(str(a), 'utf-8'))
+
+a = ""
+if not a:
+    print('b')
+else:
+    print('c')

@@ -1,5 +1,4 @@
 from transaction import Transaction
-from hashlib import sha256
 from block import *
 import json
 
