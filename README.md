@@ -7,6 +7,12 @@ Spending management is very important to our lives, it helps us to always be rea
 
 We use _tkinter library_ to create a basic UI.
 
+**Important:** The project was taken as an exercise to understand the blockchain mechanism. So there is still something we haven't done, such as: 
+- The network can't contain 2 users with the same name.
+- Nodes/Users can only work when run.exe is open...
+- ...
+The program will be crashed if something wrong happens. But these problems don't directly relate to _the blockchain machanism_, so take it easy. 
+
 ## About us:
 
 |            Name               | Profile 
